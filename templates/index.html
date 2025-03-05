@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Todo List 📝</title>
+    <style>
+        .todo-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-family: Arial, sans-serif;
+        }
+        
+        h1 {
+            color: #2d3748;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        
+        .todo-form {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        #todo-input {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .todo-form button {
+            background-color: #4299e1;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .todo-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 5px;
+        }
+        
+        .todo-item.done {
+            background-color: #f8fafc;
+            text-decoration: line-through;
+            color: #718096;
+        }
+        
+        .todo-item span {
+            flex: 1;
+        }
+        
+        .todo-item small {
+            color: #718096;
+            margin: 0 10px;
+        }
+        
+        .todo-item a {
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        .todo-item a[aria-label="Delete todo"] {
+            color: #e53e3e;
+        }
+    </style>
+</head>
+<body>
+    <div class="todo-container">
+        <h1>My Todo List 📝</h1>
+        <form action="{{ url_for('add') }}" method="post" class="todo-form">
+            <input type="text" id="todo-input" name="title" placeholder="Add a new todo..." required aria-label="New todo item">
+            <button type="submit">Add Todo</button>
+        </form>
+        <div role="list" aria-label="Todo items">
+            {% for todo in todos %}
+            <div role="listitem" class="todo-item {% if todo.done %}done{% endif %}">
+                <span>{{ todo.title }}</span>
+                <small>{{ todo.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+                <a href="{{ url_for('toggle', todo_id=todo.id) }}" aria-label="{% if todo.done %}Mark as undone{% else %}Mark as done{% endif %}">
+                    {% if todo.done %}🔄{% else %}✅{% endif %}
+                </a>
+                <a href="{{ url_for('delete', todo_id=todo.id) }}" aria-label="Delete todo">🗑️</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
